@@ -53,7 +53,7 @@ public class KochManager{
         application.setTextDraw(ts.toString());
     }
 
-    public void changeLevel(int nxt, FileType type, boolean buffer){
+    public void changeLevel(int nxt, FileType type){
 
 
         koch.cancel();
@@ -68,7 +68,7 @@ public class KochManager{
         tsg.setBegin();
 
 
-            edgeArrayList = addEdges(nxt, type, buffer);
+            edgeArrayList = addEdges(nxt, type);
 
         application.requestDrawEdges();
     }
@@ -96,26 +96,20 @@ public class KochManager{
         }
     }
 
-    public List<Edge> addEdges(int level, FileType type, boolean buffer) {
+    public List<Edge> addEdges(int level, FileType type) {
 
         List<Edge> result = new ArrayList<Edge>();
 
 
         if(type == FileType.TEXT){
-            if(buffer){
-                result = readEdgesTextBuffer(level);
-            }
-            else{
-                result = readEdgesText(level);
-            }
+
+            result = readEdgesText(level);
+
+
         }
         else if(type == FileType.BYTE){
-            if(buffer){
-                result = readEdgesByteBuffer(level);
-            }
-            else{
-                result = readEdgesByte(level);
-            }
+
+            result = readEdgesByte(level);
 
         }
         return result;
@@ -162,48 +156,7 @@ public class KochManager{
         return returnvalue;
     }
 
-    public List<Edge> readEdgesTextBuffer(int level) {
-        EDGETXTFILE = "edge" + level + ".txt";
-        List<Edge> returnvalue = new ArrayList<>();
 
-        try  {
-            FileReader fr = new FileReader(EDGETXTFILE);
-            BufferedReader br = new BufferedReader(fr);
-
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-
-            String line;
-            while((line = br.readLine()) != null){
-                // split regel in velden, gescheiden door ,
-                String[] velden = line.split(",");
-                // parse Strings naar de juiste waarden
-
-                String X1 = velden[0];
-                String X2 = velden[1];
-                String Y1 = velden[2];
-                String Y2 = velden[3];
-                String color = velden[4];
-                Color edgeColor = Color.valueOf(color);
-
-                returnvalue.add(new Edge(Double.parseDouble(X1), Double.parseDouble(Y1), Double.parseDouble(X2), Double.parseDouble(Y2), edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-
-        }
-        catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-
-        return returnvalue;
-    }
 
     public List<Edge> readEdgesByte(int level) {
         EDGETXTFILE = "edge" + level + ".byte";
@@ -228,40 +181,6 @@ public class KochManager{
             System.out.println("File reading took: " + ts.getLength());
 
         }         catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }  catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnvalue;
-    }
-
-    public List<Edge> readEdgesByteBuffer(int level) {
-        EDGETXTFILE = "edge" + level + ".byte";
-        List<Edge> returnvalue = new ArrayList<>();
-
-        try {
-
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(EDGETXTFILE));
-            DataInputStream dis = new DataInputStream(bis);
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-            for(int i = 0; i < koch.getNrOfEdges(); i++){
-
-                double X1 = dis.readDouble();
-                double X2 = dis.readDouble();
-                double Y1 = dis.readDouble();
-                double Y2 = dis.readDouble();
-
-                String color = dis.readUTF();
-                Color edgeColor = Color.valueOf(color);
-
-                returnvalue.add(new Edge(X1, Y1, X2, Y2, edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-        }  catch (FileNotFoundException ex){
             System.out.println("No file found for this combination, please generate using console application!");
         }  catch (IOException e) {
             e.printStackTrace();

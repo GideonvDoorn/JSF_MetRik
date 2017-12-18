@@ -43,7 +43,7 @@ class EdgeGenerator{
 
                         EDGEFILE = "edge" + i + ".txt";
 
-                        eg.WriteEdgesTextBuffer(edges);
+                        eg.WriteEdgesText(edges);
 
                         EDGEFILE = "edge" + i + ".byte";
 
@@ -81,7 +81,7 @@ class EdgeGenerator{
 
 
 
-                System.out.print("Enter file writing method [text, byte, textbuffer, bytebuffer]: ");
+                System.out.print("Enter file writing method [text, byte]: ");
                 String writeInput = scanner.nextLine();
 
 
@@ -98,18 +98,7 @@ class EdgeGenerator{
                     System.out.println("Writing edge to file via " + writeInput + "...\n");
                     eg.WriteEdgesByte(edges);
                 }
-                else if ("textbuffer".equals(writeInput)) {
-                    EDGEFILE = "edge" + inputLevel + ".txt";
-                    eg.ts = new TimeStamp();
-                    System.out.println("Writing edge to file via " + writeInput + "...\n");
-                    eg.WriteEdgesTextBuffer(edges);
-                }
-                else if ("bytebuffer".equals(writeInput)) {
-                    EDGEFILE = "edge" + inputLevel + ".byte";
-                    eg.ts = new TimeStamp();
-                    System.out.println("Writing edge to file via " + writeInput + "...\n");
-                    eg.WriteEdgesByteBuffer(edges);
-                }
+
                 else{
                     System.out.println("ERROR, please enter a valid method");
                     break;
@@ -166,52 +155,6 @@ class EdgeGenerator{
 
     }
 
-    public void WriteEdgesByteBuffer(List<Edge> edges){
-
-        //Werkt niet toppie
-
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-
-
-        try {
-            fos = new FileOutputStream(EDGEFILE);
-            bos = new BufferedOutputStream(fos);
-
-            ts.setBegin("WriteByteBuffer start");
-            for (Edge e : edges){
-                // schrijf velden van edge
-
-                bos.write(convertDoubleToByteArray(e.X1));
-                bos.write(convertDoubleToByteArray(e.X2));
-                bos.write(convertDoubleToByteArray(e.Y1));
-                bos.write(convertDoubleToByteArray(e.Y2));
-
-                String s = e.color.toString();
-                bos.write(s.getBytes());
-
-            }
-            ts.setEnd("WriteByteBuffer end");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        finally {
-            try {
-
-                if (bos != null){
-                    bos.flush();
-                    bos.close();
-
-                }
-
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-        }
-    }
 
     public void WriteEdgesText(List<Edge> edges) {
 
@@ -251,45 +194,7 @@ class EdgeGenerator{
 
 
 
-    public void WriteEdgesTextBuffer(List<Edge> edges) {
 
-        BufferedWriter bw = null;
-        FileWriter fw = null;
-        try{
-            fw = new FileWriter(EDGEFILE);
-            bw = new BufferedWriter(fw);
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
-
-        try {
-            ts.setBegin("WriteTextBuffer start");
-            for (Edge edge : edges) {
-                bw.write(String.format(edge.toString() + "%n", System.lineSeparator()));
-            }
-            ts.setEnd("WriteTextBuffer end");
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-        finally {
-            try {
-
-                if (bw != null)
-                    bw.close();
-
-                if (fw != null)
-                    fw.close();
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-        }
-
-    }
 
     private byte[] convertDoubleToByteArray(double toConvert){
         double d = toConvert;

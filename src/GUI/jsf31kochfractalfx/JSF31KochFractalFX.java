@@ -65,7 +65,6 @@ public class JSF31KochFractalFX extends Application {
     Button btnDrawLevel;
     CheckBox cbByte;
     CheckBox cbText;
-    CheckBox cbBuffer;
 
     public ProgressBar pbLeftEdge;
     public ProgressBar pbBottomEdge;
@@ -164,13 +163,11 @@ public class JSF31KochFractalFX extends Application {
 
         cbText = new CheckBox("Text");
         cbByte = new CheckBox("Byte");
-        cbBuffer = new CheckBox("Buffer");
 
         grid.add(tfLevel,  3, 6);
         grid.add(btnDrawLevel, 5, 6);
         grid.add(cbText, 6, 6);
         grid.add(cbByte, 6, 7);
-        grid.add(cbBuffer, 6, 8);
 
         //Progressbars and labels
 
@@ -367,7 +364,7 @@ public class JSF31KochFractalFX extends Application {
 
 
 
-        kochManager.changeLevel(input, type, cbBuffer.isSelected());
+        kochManager.changeLevel(input, type);
 
     }
 
