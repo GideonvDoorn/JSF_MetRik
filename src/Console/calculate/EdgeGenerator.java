@@ -41,9 +41,6 @@ class EdgeGenerator{
 
                         System.out.println("Writing edges to file for level " + i + "...\n");
 
-                        EDGEFILE = "edge" + i + ".txt";
-
-                        eg.WriteEdgesText(edges);
 
                         EDGEFILE = "edge" + i + ".byte";
 
@@ -81,28 +78,15 @@ class EdgeGenerator{
 
 
 
-                System.out.print("Enter file writing method [text, byte]: ");
-                String writeInput = scanner.nextLine();
 
 
-                if ("text".equals(writeInput)) {
-                    EDGEFILE = "edge" + inputLevel + ".txt";
-                    eg.ts = new TimeStamp();
-                    System.out.println("Writing edge to file via " + writeInput + "...\n");
-                    eg.WriteEdgesText(edges);
-                }
-                else if ("byte".equals(writeInput)) {
                     EDGEFILE = "edge" + inputLevel + ".byte";
                     eg.ts = new TimeStamp();
 
-                    System.out.println("Writing edge to file via " + writeInput + "...\n");
+                    System.out.println("Writing edge to file...\n");
                     eg.WriteEdgesByte(edges);
-                }
 
-                else{
-                    System.out.println("ERROR, please enter a valid method");
-                    break;
-                }
+
 
                 System.out.println("Edge generation succesfull!\n");
                 System.out.println("Writing took " + eg.ts.getLength() + " MS");
@@ -154,44 +138,6 @@ class EdgeGenerator{
         }
 
     }
-
-
-    public void WriteEdgesText(List<Edge> edges) {
-
-
-        FileWriter fw = null;
-
-        try{
-            fw = new FileWriter(EDGEFILE);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        try {
-            ts.setBegin("WriteText start");
-            for (Edge edge : edges) {
-                fw.write(String.format(edge.toString() + "%n", System.lineSeparator()));
-            }
-            ts.setEnd("WriteText end");
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-        finally {
-            try {
-
-
-                if (fw != null)
-                    fw.close();
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-        }
-    }
-
 
 
 

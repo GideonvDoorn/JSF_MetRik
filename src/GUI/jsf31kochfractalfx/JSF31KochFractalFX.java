@@ -63,8 +63,6 @@ public class JSF31KochFractalFX extends Application {
     //Choose level elements
     TextField tfLevel;
     Button btnDrawLevel;
-    CheckBox cbByte;
-    CheckBox cbText;
 
     public ProgressBar pbLeftEdge;
     public ProgressBar pbBottomEdge;
@@ -161,13 +159,10 @@ public class JSF31KochFractalFX extends Application {
             }
         });
 
-        cbText = new CheckBox("Text");
-        cbByte = new CheckBox("Byte");
 
         grid.add(tfLevel,  3, 6);
         grid.add(btnDrawLevel, 5, 6);
-        grid.add(cbText, 6, 6);
-        grid.add(cbByte, 6, 7);
+
 
         //Progressbars and labels
 
@@ -321,24 +316,6 @@ public class JSF31KochFractalFX extends Application {
 
     private void drawSelectedlevel(ActionEvent event) {
 
-        FileType type = FileType.TEXT;
-
-        if(cbText.isSelected() && cbByte.isSelected()){
-            System.out.println("ERROR, Please select either byte or text!");
-            return;
-        }
-        else if(cbByte.isSelected()){
-            type = FileType.BYTE;
-        }
-        else if(cbText.isSelected()){
-            type = FileType.TEXT;
-        }
-        else{
-            System.out.println("ERROR, Please check byte or text!");
-            return;
-        }
-
-
         int input;
         try{
             input = Integer.parseInt(tfLevel.getText());
@@ -364,7 +341,7 @@ public class JSF31KochFractalFX extends Application {
 
 
 
-        kochManager.changeLevel(input, type);
+        kochManager.changeLevel(input);
 
     }
 

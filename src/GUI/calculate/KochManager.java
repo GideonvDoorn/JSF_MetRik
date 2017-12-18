@@ -37,7 +37,6 @@ public class KochManager{
 
     public KochManager(JSF31KochFractalFX application){
         this.application = application;
-        //pool = Executors.newFixedThreadPool(4);
     }
 
     public void drawEdges(){
@@ -53,7 +52,7 @@ public class KochManager{
         application.setTextDraw(ts.toString());
     }
 
-    public void changeLevel(int nxt, FileType type){
+    public void changeLevel(int nxt){
 
 
         koch.cancel();
@@ -68,7 +67,7 @@ public class KochManager{
         tsg.setBegin();
 
 
-            edgeArrayList = addEdges(nxt, type);
+            edgeArrayList = addEdges(nxt);
 
         application.requestDrawEdges();
     }
@@ -96,22 +95,12 @@ public class KochManager{
         }
     }
 
-    public List<Edge> addEdges(int level, FileType type) {
+    public List<Edge> addEdges(int level) {
 
         List<Edge> result = new ArrayList<Edge>();
+        result = readEdgesByte(level);
 
 
-        if(type == FileType.TEXT){
-
-            result = readEdgesText(level);
-
-
-        }
-        else if(type == FileType.BYTE){
-
-            result = readEdgesByte(level);
-
-        }
         return result;
 
 
@@ -119,46 +108,7 @@ public class KochManager{
     }
 
 
-
-    public List<Edge> readEdgesText(int level) {
-        EDGETXTFILE = "edge" + level + ".txt";
-        List<Edge> returnvalue = new ArrayList<>();
-        try (FileReader fr = new FileReader(EDGETXTFILE); Scanner inputScanner = new Scanner(fr)) {
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-            while(inputScanner.hasNextLine()){
-                String regel = inputScanner.nextLine();
-                // split regel in velden, gescheiden door ,
-                String[] velden = regel.split(",");
-                // parse Strings naar de juiste waarden
-
-                String X1 = velden[0];
-                String X2 = velden[1];
-                String Y1 = velden[2];
-                String Y2 = velden[3];
-                String color = velden[4];
-                Color edgeColor = Color.valueOf(color);
-                returnvalue.add(new Edge(Double.parseDouble(X1), Double.parseDouble(Y1), Double.parseDouble(X2), Double.parseDouble(Y2), edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-
-        }
-        catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return returnvalue;
-    }
-
-
-
-    public List<Edge> readEdgesByte(int level) {
+    private List<Edge> readEdgesByte(int level) {
         EDGETXTFILE = "edge" + level + ".byte";
         List<Edge> returnvalue = new ArrayList<>();
 
