@@ -1,14 +1,15 @@
 package GUI.calculate;
 
 import GUI.jsf31kochfractalfx.JSF31KochFractalFX;
-import GUI.timeutil.TimeStamp;
+import Shared.KochFractal;
+import timeutil.TimeStamp;
+import Shared.Edge;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -137,4 +138,11 @@ public class KochManager{
         }
         return returnvalue;
     }
+
+    public void ReadEdgesByte(List<Edge> edges){
+
+
+
+    }
+
 }

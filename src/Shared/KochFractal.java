@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI.calculate;
+package Shared;
 
+import Shared.Edge;
 import javafx.scene.paint.Color;
 
 import java.util.Observable;

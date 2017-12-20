@@ -1,8 +1,11 @@
 package Console.calculate;
 
-import Console.timeutil.TimeStamp;
+import timeutil.*;
+import Shared.Edge;
 
 import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Scanner;
 
@@ -99,48 +102,44 @@ class EdgeGenerator{
 
     public void WriteEdgesByte(List<Edge> edges){
 
-        FileOutputStream fos = null;
-        DataOutputStream dos = null;
+        RandomAccessFile memoryMappedFile = null;
+        MappedByteBuffer out = null;
 
+        try{
+            memoryMappedFile = new RandomAccessFile("EDGE.txt", "rw");
 
-        try  {
-            fos = new FileOutputStream(EDGEFILE);
-            dos = new DataOutputStream(fos);
-
-            ts.setBegin("WriteByte start");
-            for (Edge e : edges){
-                // schrijf velden van edge
-                dos.writeDouble(e.X1);
-                dos.writeDouble(e.X2);
-                dos.writeDouble(e.Y1);
-                dos.writeDouble(e.Y2);
-                dos.writeUTF(e.color.toString());
-            }
-            ts.setEnd("WriteByte end" );
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
-        finally {
-            try {
-
-                if (dos != null)
-                    dos.close();
-
-                if (fos != null)
-                    fos.close();
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
+        catch (FileNotFoundException ex){
+            ex.printStackTrace();
         }
+
+        //Mapping a file into memory
+        FileChannel fc = memoryMappedFile.getChannel();
+
+        try{
+            out = fc.map(FileChannel.MapMode.READ_WRITE, 0, 10000);
+
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+
+
+        //Writing into Memory Mapped File
+        ts.setBegin("Writing Edges to Memory Mapped File...");
+        System.out.println("Writing Edges to Memory Mapped File...");
+        for (Edge e : edges){
+            // schrijf velden van edge
+            out.put(convertDoubleToByteArray(e.X1));
+            out.put(convertDoubleToByteArray(e.Y1));
+            out.put(convertDoubleToByteArray(e.X2));
+            out.put(convertDoubleToByteArray(e.Y2));
+            out.put(e.color.toString().getBytes());
+        }
+
+        System.out.println("Writing Edges to Memory Mapped File is completed");
 
     }
-
-
-
 
     private byte[] convertDoubleToByteArray(double toConvert){
         double d = toConvert;

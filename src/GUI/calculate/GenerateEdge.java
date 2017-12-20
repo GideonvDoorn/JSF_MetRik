@@ -1,6 +1,9 @@
 package GUI.calculate;
 
 import GUI.jsf31kochfractalfx.JSF31KochFractalFX;
+import Shared.Edge;
+import Shared.EdgeSide;
+import Shared.KochFractal;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 

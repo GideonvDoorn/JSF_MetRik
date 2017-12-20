@@ -4,8 +4,7 @@
  */
 package GUI.jsf31kochfractalfx;
 
-import GUI.calculate.Edge;
-import GUI.calculate.FileType;
+import Shared.Edge;
 import GUI.calculate.KochManager;
 import javafx.application.Application;
 import javafx.application.Platform;

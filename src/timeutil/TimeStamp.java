@@ -1,4 +1,4 @@
-package GUI.timeutil;
+package timeutil;
 
 import java.util.LinkedList;
 import java.util.List;
