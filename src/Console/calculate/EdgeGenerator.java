@@ -138,7 +138,6 @@ class EdgeGenerator{
         }
 
         System.out.println("Writing Edges to Memory Mapped File is completed");
-
     }
 
     private byte[] convertDoubleToByteArray(double toConvert){

@@ -8,6 +8,8 @@ import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -99,8 +101,8 @@ public class KochManager{
     public List<Edge> addEdges(int level) {
 
         List<Edge> result = new ArrayList<Edge>();
-        result = readEdgesByte(level);
-
+        //result = readEdgesByte(level);
+        result = ReadEdgesByte();
 
         return result;
 
@@ -139,10 +141,31 @@ public class KochManager{
         return returnvalue;
     }
 
-    public void ReadEdgesByte(List<Edge> edges){
+    public List<Edge> ReadEdgesByte(){
 
+        RandomAccessFile memoryMappedFile = null;
+        try {
+           memoryMappedFile = new RandomAccessFile("EDGE.txt", "r");
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
 
+        //Mapping a file into memory
+        FileChannel fc = memoryMappedFile.getChannel();
+        MappedByteBuffer out = null;
+        try{
+            out = fc.map(FileChannel.MapMode.READ_ONLY, 0, 10000);
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
 
+        //reading 10 bytes from memory file in Java
+        for (int i = 0; i < 10; i++) {
+            System.out.print((double)out.get(i));
+        }
+        System.out.println("\nReading from Memory Mapped File is completed");
+        return null;
     }
-
 }
