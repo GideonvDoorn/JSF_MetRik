@@ -1,4 +1,4 @@
-package GUI.calculate;
+package shared;
 
 public enum EdgeSide {
 

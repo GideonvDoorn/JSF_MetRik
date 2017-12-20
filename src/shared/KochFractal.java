@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI.calculate;
+package shared;
 
 import javafx.scene.paint.Color;
 
@@ -14,7 +14,7 @@ import java.util.Observable;
  */
 public class KochFractal extends Observable {
 
-    private int level = 0;      // The current level of the fractal
+    private int level = 1;      // The current level of the fractal
     private int nrOfEdges = 3;  // The number of edges in the current level of the fractal
     private float hue;          // Hue value of color for next edge
     private boolean cancelled;  // Flag to indicate that calculation has been cancelled 

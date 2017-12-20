@@ -1,6 +1,10 @@
 package Console.calculate;
 
 
+import shared.Edge;
+import shared.EdgeSide;
+import shared.KochFractal;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;

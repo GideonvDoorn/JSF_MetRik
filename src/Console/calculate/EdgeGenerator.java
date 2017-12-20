@@ -1,6 +1,7 @@
 package Console.calculate;
 
 import Console.timeutil.TimeStamp;
+import shared.Edge;
 
 import java.io.*;
 import java.util.List;

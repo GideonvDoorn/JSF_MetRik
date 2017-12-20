@@ -4,6 +4,9 @@ import GUI.jsf31kochfractalfx.JSF31KochFractalFX;
 import GUI.timeutil.TimeStamp;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
+import shared.Edge;
+import shared.FileType;
+import shared.KochFractal;
 
 import java.io.*;
 import java.util.ArrayList;

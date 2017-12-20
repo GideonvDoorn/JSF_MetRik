@@ -2,6 +2,9 @@ package Console.calculate;
 
 
 import Console.timeutil.TimeStamp;
+import shared.Edge;
+import shared.EdgeSide;
+import shared.KochFractal;
 
 import java.util.ArrayList;
 import java.util.List;

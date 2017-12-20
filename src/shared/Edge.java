@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package GUI.calculate;
+package shared;
 
 import javafx.scene.paint.Color;
 
@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
  * @author Peter Boots
  */
 public class Edge {
+
     public double X1, Y1, X2, Y2;
     public Color color;
     
@@ -21,5 +22,11 @@ public class Edge {
         this.X2 = X2;
         this.Y2 = Y2;
         this.color = color;
+
+    }
+
+    @Override
+    public String toString(){
+        return X1 + "," + X2 + "," + Y1 + "," + Y2 + "," + color.toString();
     }
 }
