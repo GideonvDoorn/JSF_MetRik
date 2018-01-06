@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 class EdgeGenerator{
 
+    //Edge generator console app
+
     private static String EDGEFILE  = "";
 
 
@@ -76,12 +78,6 @@ class EdgeGenerator{
                     System.out.println("ERROR, please enter a valid level");
                     break;
                 }
-
-
-
-
-
-
 
                     EDGEFILE = "edge" + inputLevel + ".byte";
                     eg.ts = new TimeStamp();
