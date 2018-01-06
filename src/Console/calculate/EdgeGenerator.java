@@ -100,6 +100,7 @@ class EdgeGenerator{
 
         RandomAccessFile memoryMappedFile = null;
         MappedByteBuffer out = null;
+        int byteSizePrediction = 0;
 
         try{
             memoryMappedFile = new RandomAccessFile("EDGE.txt", "rw");
@@ -112,14 +113,19 @@ class EdgeGenerator{
         //Mapping a file into memory
         FileChannel fc = memoryMappedFile.getChannel();
 
+        for(Edge edge : edges){
+            //double is 8 bytes
+            //color = 10 bytes / color.tostring.length
+            byteSizePrediction += (32 + edge.color.toString().length());
+        }
+
         try{
-            out = fc.map(FileChannel.MapMode.READ_WRITE, 0, 10000);
+            out = fc.map(FileChannel.MapMode.READ_WRITE, 0, byteSizePrediction);
 
         }
         catch (IOException ex){
             ex.printStackTrace();
         }
-
 
         //Writing into Memory Mapped File
         ts.setBegin("Writing Edges to Memory Mapped File...");
