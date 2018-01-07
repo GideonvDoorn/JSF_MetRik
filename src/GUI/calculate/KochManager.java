@@ -130,88 +130,32 @@ public class KochManager{
             ex.printStackTrace();
         }
 
+        int byteSizePrediction = 0;
+        for(int i = 0; i < koch.getNrOfEdges(); i++){
+            //double is 8 bytes
+            //color = 10 bytes / color.tostring.length
+            Color c = Color.RED;
+            byteSizePrediction += (32 + c.toString().length());
+        }
+
+
         //Mapping a file into memory
         FileChannel fc = memoryMappedFile.getChannel();
         MappedByteBuffer out = null;
         try {
-            out = fc.map(FileChannel.MapMode.READ_ONLY, 0, 10000);
+            out = fc.map(FileChannel.MapMode.READ_ONLY, 0, byteSizePrediction);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
 
-        int byteSizePrediction = 0;
-        for (int i = 0; i < koch.getNrOfEdges(); i++) {
-            //double is 8 bytes
-            //color = 10 bytes?
-
-            Color color = Color.RED;
-            byteSizePrediction += (32 + color.toString().length());
-            //System.out.println(edge.color.toString());
-        }
-
         List<Edge> edges = new ArrayList<>();
-
-//        //reading bytes from memory file
-//        for (int currentedge = 0; currentedge < koch.getNrOfEdges(); currentedge++) {
-//            byte[] X1 = new byte[8];
-//            for (int n = 0; n < 8; n++) {
-//                X1[n] = out.get(((currentedge) * 8) + n);
-//            }
-//            byte[] Y1 = new byte[8];
-//            for (int n = 0; n < 8; n++) {
-//                Y1[n] = out.get((currentedge + 1) * 8 + n);
-//            }
-//            byte[] X2 = new byte[8];
-//            for (int n = 0; n < 8; n++) {
-//                X2[n] = out.get((currentedge + 2) * 8 + n);
-//            }
-//            byte[] Y2 = new byte[8];
-//            for (int n = 0; n < 8; n++) {
-//                Y2[n] = out.get((currentedge + 3) * 8 + n);
-//            }
-//
-//            out.getDouble();
-//            System.out.println(toDouble());
-//            byte[] Y1 = new byte[8];
-//            for (int n = 9; n < 17; n++) {
-//                Y1[n - 9] = out.get((currentedge * 8) + n);
-//            }
-//            byte[] X2 = new byte[8];
-//            for (int n = 17; n < 25; n++) {
-//                X2[n - 17] = out.get((currentedge * 8) + n);
-//            }
-//            byte[] Y2 = new byte[8];
-//            for (int n = 25; n < 33; n++) {
-//                Y2[n - 25] = out.get((currentedge * 8) + n);
-//            }
-//            byte[] color = new byte[10];
-//            for (int n = 0; n < 10; n++) {
-//                color[n] = out.get((currentedge * 8) + n);
-//            }
-//
-//            double double1 = toDouble(X1);
-//            double double2 = toDouble(X2);
-//            double double3 = toDouble(Y1);
-//            double double4 = toDouble(Y2);
-//
-//            System.out.println(double1 + "  ,  " + double2 + "  ,  " + double3 + "  ,  " + double4);
-//
-////          String colorString = new String(color);
-////          System.out.println(colorString);
-//            edges.add(new Edge(double1, double2, double3, double4, Color.RED));
-//
-//        }
 
         for (int currentedge = 0; currentedge < koch.getNrOfEdges(); currentedge++) {
             double double1 = 0;
             double double2 = 0;
             double double3 = 0;
             double double4 = 0;
-//
-//            if(currentedge == 0){
-//                double1 = out.getDouble();
-//            }
 
             double1 = out.getDouble();
             double2 = out.getDouble();

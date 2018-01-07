@@ -1,5 +1,6 @@
 package Console.calculate;
 
+import javafx.scene.paint.Color;
 import timeutil.*;
 import Shared.Edge;
 
@@ -109,11 +110,21 @@ class EdgeGenerator{
             ex.printStackTrace();
         }
 
+
+
+        int byteSizePrediction = 0;
+        for(Edge edge : edges){
+            //double is 8 bytes
+            //color = 10 bytes / color.tostring.length
+            byteSizePrediction += (32 + edge.color.toString().length());
+        }
+
+
         //Mapping a file into memory
         FileChannel fc = memoryMappedFile.getChannel();
 
         try{
-            out = fc.map(FileChannel.MapMode.READ_WRITE, 0, 10000);
+            out = fc.map(FileChannel.MapMode.READ_WRITE, 0, byteSizePrediction);
 
         }
         catch (IOException ex){
@@ -124,6 +135,8 @@ class EdgeGenerator{
         //Writing into Memory Mapped File
         ts.setBegin("Writing Edges to Memory Mapped File...");
         System.out.println("Writing Edges to Memory Mapped File...");
+
+        int currentedge = 0;
         for (Edge e : edges){
             // schrijf velden van edge
             out.put(convertDoubleToByteArray(e.X1));
@@ -132,8 +145,9 @@ class EdgeGenerator{
             out.put(convertDoubleToByteArray(e.Y2));
             out.put(e.color.toString().getBytes());
 
-            System.out.println(e.X1 + "," + e.Y1 + "," + e.X2 + "," + e.Y2);
+            System.out.println("edge: " + currentedge + " - " + e.X1 + "  ,  " + e.Y1 + "  ,  " + e.X2 + "  ,  " + e.Y2);
 
+            currentedge++;
         }
 
         System.out.println("Writing Edges to Memory Mapped File is completed");
