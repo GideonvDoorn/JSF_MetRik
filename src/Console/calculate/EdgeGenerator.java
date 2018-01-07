@@ -102,7 +102,7 @@ class EdgeGenerator{
         MappedByteBuffer out = null;
 
         try{
-            memoryMappedFile = new RandomAccessFile("EDGE.txt", "rw");
+            memoryMappedFile = new RandomAccessFile("EDGE.dat", "rw");
 
         }
         catch (FileNotFoundException ex){
@@ -131,6 +131,9 @@ class EdgeGenerator{
             out.put(convertDoubleToByteArray(e.X2));
             out.put(convertDoubleToByteArray(e.Y2));
             out.put(e.color.toString().getBytes());
+
+            System.out.println(e.X1 + "," + e.Y1 + "," + e.X2 + "," + e.Y2);
+
         }
 
         System.out.println("Writing Edges to Memory Mapped File is completed");
