@@ -1,7 +1,10 @@
 package Console.calculate;
 
 
-import Console.timeutil.TimeStamp;
+import Shared.EdgeSide;
+import Shared.KochFractal;
+import timeutil.*;
+import Shared.Edge;
 
 import java.util.ArrayList;
 import java.util.List;

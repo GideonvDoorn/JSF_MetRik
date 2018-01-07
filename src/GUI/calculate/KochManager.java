@@ -1,14 +1,18 @@
 package GUI.calculate;
 
 import GUI.jsf31kochfractalfx.JSF31KochFractalFX;
-import GUI.timeutil.TimeStamp;
+import Shared.KochFractal;
+import timeutil.TimeStamp;
+import Shared.Edge;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,7 +41,6 @@ public class KochManager{
 
     public KochManager(JSF31KochFractalFX application){
         this.application = application;
-        //pool = Executors.newFixedThreadPool(4);
     }
 
     public void drawEdges(){
@@ -53,7 +56,7 @@ public class KochManager{
         application.setTextDraw(ts.toString());
     }
 
-    public void changeLevel(int nxt, FileType type, boolean buffer){
+    public void changeLevel(int nxt){
 
 
         koch.cancel();
@@ -68,204 +71,177 @@ public class KochManager{
         tsg.setBegin();
 
 
-            edgeArrayList = addEdges(nxt, type, buffer);
+        edgeArrayList = addEdges(nxt);
 
         application.requestDrawEdges();
     }
 
 
-    public synchronized void finishedAdding() {
-        count++;
 
-        if(count == 3){
-            tsg.setEnd();
-            application.setTextCalc(tsg.toString());
-            application.clearKochPanel();
-            try{
-                edgeArrayList.addAll(TaskLeft.get());
-                edgeArrayList.addAll(TaskBottom.get());
-                edgeArrayList.addAll(TaskRight.get());
-            }
-            catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-            catch(ExecutionException ex){
-                ex.printStackTrace();
-            }
-            application.requestDrawEdges();
-        }
-    }
-
-    public List<Edge> addEdges(int level, FileType type, boolean buffer) {
+    public List<Edge> addEdges(int level) {
 
         List<Edge> result = new ArrayList<Edge>();
+        //result = readEdgesByte(level);
+        result = ReadEdgesByte(level);
 
-
-        if(type == FileType.TEXT){
-            if(buffer){
-                result = readEdgesTextBuffer(level);
-            }
-            else{
-                result = readEdgesText(level);
-            }
-        }
-        else if(type == FileType.BYTE){
-            if(buffer){
-                result = readEdgesByteBuffer(level);
-            }
-            else{
-                result = readEdgesByte(level);
-            }
-
-        }
         return result;
 
 
 
     }
 
+//
+//    private List<Edge> readEdgesByte(int level) {
+//        EDGETXTFILE = "edge" + level + ".byte";
+//        List<Edge> returnvalue = new ArrayList<>();
+//
+//        try (DataInputStream dis = new DataInputStream(new FileInputStream(EDGETXTFILE))){
+//
+//            TimeStamp ts = new TimeStamp();
+//            ts.setBegin();
+//            for(int i = 0; i < koch.getNrOfEdges(); i++){
+//                double X1 = dis.readDouble();
+//                double X2 = dis.readDouble();
+//                double Y1 = dis.readDouble();
+//                double Y2 = dis.readDouble();
+//
+//
+//                String color = dis.readUTF();
+//                Color edgeColor = Color.valueOf(color);
+//                returnvalue.add(new Edge(X1, Y1, X2, Y2, edgeColor));
+//            }
+//            ts.setEnd();
+//            System.out.println("File reading took: " + ts.getLength());
+//
+//        }         catch (FileNotFoundException ex){
+//            System.out.println("No file found for this combination, please generate using console application!");
+//        }  catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return returnvalue;
+//    }
 
+    public List<Edge> ReadEdgesByte( int level ) {
 
-    public List<Edge> readEdgesText(int level) {
-        EDGETXTFILE = "edge" + level + ".txt";
-        List<Edge> returnvalue = new ArrayList<>();
-        try (FileReader fr = new FileReader(EDGETXTFILE); Scanner inputScanner = new Scanner(fr)) {
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-            while(inputScanner.hasNextLine()){
-                String regel = inputScanner.nextLine();
-                // split regel in velden, gescheiden door ,
-                String[] velden = regel.split(",");
-                // parse Strings naar de juiste waarden
-
-                String X1 = velden[0];
-                String X2 = velden[1];
-                String Y1 = velden[2];
-                String Y2 = velden[3];
-                String color = velden[4];
-                Color edgeColor = Color.valueOf(color);
-                returnvalue.add(new Edge(Double.parseDouble(X1), Double.parseDouble(Y1), Double.parseDouble(X2), Double.parseDouble(Y2), edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-
-        }
-        catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return returnvalue;
-    }
-
-    public List<Edge> readEdgesTextBuffer(int level) {
-        EDGETXTFILE = "edge" + level + ".txt";
-        List<Edge> returnvalue = new ArrayList<>();
-
-        try  {
-            FileReader fr = new FileReader(EDGETXTFILE);
-            BufferedReader br = new BufferedReader(fr);
-
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-
-            String line;
-            while((line = br.readLine()) != null){
-                // split regel in velden, gescheiden door ,
-                String[] velden = line.split(",");
-                // parse Strings naar de juiste waarden
-
-                String X1 = velden[0];
-                String X2 = velden[1];
-                String Y1 = velden[2];
-                String Y2 = velden[3];
-                String color = velden[4];
-                Color edgeColor = Color.valueOf(color);
-
-                returnvalue.add(new Edge(Double.parseDouble(X1), Double.parseDouble(Y1), Double.parseDouble(X2), Double.parseDouble(Y2), edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-
-        }
-        catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-
-        return returnvalue;
-    }
-
-    public List<Edge> readEdgesByte(int level) {
-        EDGETXTFILE = "edge" + level + ".byte";
-        List<Edge> returnvalue = new ArrayList<>();
-
-        try (DataInputStream dis = new DataInputStream(new FileInputStream(EDGETXTFILE))){
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-            for(int i = 0; i < koch.getNrOfEdges(); i++){
-                double X1 = dis.readDouble();
-                double X2 = dis.readDouble();
-                double Y1 = dis.readDouble();
-                double Y2 = dis.readDouble();
-
-
-                String color = dis.readUTF();
-                Color edgeColor = Color.valueOf(color);
-                returnvalue.add(new Edge(X1, Y1, X2, Y2, edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-        }         catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }  catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnvalue;
-    }
-
-    public List<Edge> readEdgesByteBuffer(int level) {
-        EDGETXTFILE = "edge" + level + ".byte";
-        List<Edge> returnvalue = new ArrayList<>();
-
+        RandomAccessFile memoryMappedFile = null;
         try {
-
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(EDGETXTFILE));
-            DataInputStream dis = new DataInputStream(bis);
-
-            TimeStamp ts = new TimeStamp();
-            ts.setBegin();
-            for(int i = 0; i < koch.getNrOfEdges(); i++){
-
-                double X1 = dis.readDouble();
-                double X2 = dis.readDouble();
-                double Y1 = dis.readDouble();
-                double Y2 = dis.readDouble();
-
-                String color = dis.readUTF();
-                Color edgeColor = Color.valueOf(color);
-
-                returnvalue.add(new Edge(X1, Y1, X2, Y2, edgeColor));
-            }
-            ts.setEnd();
-            System.out.println("File reading took: " + ts.getLength());
-
-        }  catch (FileNotFoundException ex){
-            System.out.println("No file found for this combination, please generate using console application!");
-        }  catch (IOException e) {
-            e.printStackTrace();
+            memoryMappedFile = new RandomAccessFile("EDGE.dat", "r");
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        return returnvalue;
+
+        //Mapping a file into memory
+        FileChannel fc = memoryMappedFile.getChannel();
+        MappedByteBuffer out = null;
+        try {
+            out = fc.map(FileChannel.MapMode.READ_ONLY, 0, 10000);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
+        int byteSizePrediction = 0;
+        for (int i = 0; i < koch.getNrOfEdges(); i++) {
+            //double is 8 bytes
+            //color = 10 bytes?
+
+            Color color = Color.RED;
+            byteSizePrediction += (32 + color.toString().length());
+            //System.out.println(edge.color.toString());
+        }
+
+        List<Edge> edges = new ArrayList<>();
+
+//        //reading bytes from memory file
+//        for (int currentedge = 0; currentedge < koch.getNrOfEdges(); currentedge++) {
+//            byte[] X1 = new byte[8];
+//            for (int n = 0; n < 8; n++) {
+//                X1[n] = out.get(((currentedge) * 8) + n);
+//            }
+//            byte[] Y1 = new byte[8];
+//            for (int n = 0; n < 8; n++) {
+//                Y1[n] = out.get((currentedge + 1) * 8 + n);
+//            }
+//            byte[] X2 = new byte[8];
+//            for (int n = 0; n < 8; n++) {
+//                X2[n] = out.get((currentedge + 2) * 8 + n);
+//            }
+//            byte[] Y2 = new byte[8];
+//            for (int n = 0; n < 8; n++) {
+//                Y2[n] = out.get((currentedge + 3) * 8 + n);
+//            }
+//
+//            out.getDouble();
+//            System.out.println(toDouble());
+//            byte[] Y1 = new byte[8];
+//            for (int n = 9; n < 17; n++) {
+//                Y1[n - 9] = out.get((currentedge * 8) + n);
+//            }
+//            byte[] X2 = new byte[8];
+//            for (int n = 17; n < 25; n++) {
+//                X2[n - 17] = out.get((currentedge * 8) + n);
+//            }
+//            byte[] Y2 = new byte[8];
+//            for (int n = 25; n < 33; n++) {
+//                Y2[n - 25] = out.get((currentedge * 8) + n);
+//            }
+//            byte[] color = new byte[10];
+//            for (int n = 0; n < 10; n++) {
+//                color[n] = out.get((currentedge * 8) + n);
+//            }
+//
+//            double double1 = toDouble(X1);
+//            double double2 = toDouble(X2);
+//            double double3 = toDouble(Y1);
+//            double double4 = toDouble(Y2);
+//
+//            System.out.println(double1 + "  ,  " + double2 + "  ,  " + double3 + "  ,  " + double4);
+//
+////          String colorString = new String(color);
+////          System.out.println(colorString);
+//            edges.add(new Edge(double1, double2, double3, double4, Color.RED));
+//
+//        }
+
+        for (int currentedge = 0; currentedge < koch.getNrOfEdges(); currentedge++) {
+            double double1 = 0;
+            double double2 = 0;
+            double double3 = 0;
+            double double4 = 0;
+//
+//            if(currentedge == 0){
+//                double1 = out.getDouble();
+//            }
+
+            double1 = out.getDouble();
+            double2 = out.getDouble();
+            double3 = out.getDouble();
+            double4 = out.getDouble();
+
+            String s;
+            byte[] bytes = new byte[10];
+            out.get(bytes);
+            s = new String(bytes);
+
+            Color c = Color.valueOf(s);
+
+            System.out.println("edge: " + currentedge + " - " + double1 + "  ,  " + double2 + "  ,  " + double3 + "  ,  " + double4);
+
+            edges.add(new Edge(double1, double2, double3, double4, c));
+        }
+
+        System.out.println("\nReading from Memory Mapped File is completed");
+        return edges;
+    }
+
+
+    public static byte[] toByteArray(double value) {
+        byte[] bytes = new byte[8];
+        ByteBuffer.wrap(bytes).putDouble(value);
+        return bytes;
+    }
+
+    public static double toDouble(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).getDouble();
     }
 }
