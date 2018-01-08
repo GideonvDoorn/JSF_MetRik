@@ -67,8 +67,6 @@ public class KochManager{
         koch.setLevel(nxt);
 
 
-        tsg = new TimeStamp();
-        tsg.setBegin();
 
 
         edgeArrayList = addEdges(nxt);
@@ -151,6 +149,9 @@ public class KochManager{
 
         List<Edge> edges = new ArrayList<>();
 
+
+        tsg = new TimeStamp();
+        tsg.setBegin();
         for (int currentedge = 0; currentedge < koch.getNrOfEdges(); currentedge++) {
             double double1 = 0;
             double double2 = 0;
@@ -169,12 +170,13 @@ public class KochManager{
 
             Color c = Color.valueOf(s);
 
-            System.out.println("edge: " + currentedge + " - " + double1 + "  ,  " + double2 + "  ,  " + double3 + "  ,  " + double4);
+//            System.out.println("edge: " + currentedge + " - " + double1 + "  ,  " + double2 + "  ,  " + double3 + "  ,  " + double4);
 
             edges.add(new Edge(double1, double2, double3, double4, c));
         }
+        tsg.setEnd();
 
-        System.out.println("\nReading from Memory Mapped File is completed");
+        System.out.println("\nReading from Memory Mapped File is completed - took: " + tsg.getLength());
         return edges;
     }
 

@@ -28,7 +28,7 @@ class EdgeGenerator{
         while(!exit){
             while (true) {
                 System.out.print("Welcome! (Type [exit] to exit application)\n");
-                System.out.print("Enter which level you want to generate [1-11] or [genall]: ");
+                System.out.print("Enter which level you want to generate [1-11]: ");
                 String input = scanner.nextLine();
                 int inputLevel;
 
@@ -145,12 +145,12 @@ class EdgeGenerator{
             out.put(convertDoubleToByteArray(e.Y2));
             out.put(e.color.toString().getBytes());
 
-            System.out.println("edge: " + currentedge + " - " + e.X1 + "  ,  " + e.Y1 + "  ,  " + e.X2 + "  ,  " + e.Y2);
+//            System.out.println("edge: " + currentedge + " - " + e.X1 + "  ,  " + e.Y1 + "  ,  " + e.X2 + "  ,  " + e.Y2);
 
             currentedge++;
         }
-
-        System.out.println("Writing Edges to Memory Mapped File is completed");
+        ts.setEnd();
+        System.out.println("Writing Edges to Memory Mapped File is completed - took: " + ts.getLength());
     }
 
     private byte[] convertDoubleToByteArray(double toConvert){
